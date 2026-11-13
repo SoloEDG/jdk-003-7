@@ -10,10 +10,37 @@ defineEmits<{ claim: [skip: boolean] }>();
     </div>
     <h2>把胜利带进下一场</h2>
     <p class="muted">
-      战斗结束后结算金币，并选择一张新牌。林地额外疗愈，险路改变奖励池。
+      战斗结束后结算金币，并选择一张新牌。债务扣款与预支抵扣会在战利品中逐笔列出。
     </p>
     <div v-if="rewardState.offer && !rewardState.offer.claimed">
-      <div class="notice">
+      <!-- 奖励账目：原奖励 → 扣款 → 实际所得 -->
+      <div class="notice settlement" v-if="rewardState.offer.breakdown">
+        <div class="settle-row gross">
+          <span>原奖励金币</span>
+          <b>{{ rewardState.offer.breakdown.grossGold }} 金</b>
+        </div>
+        <div
+          v-for="(d, i) in rewardState.offer.breakdown.deductions"
+          :key="i"
+          class="settle-row deduct"
+        >
+          <span>－ {{ d.label }}<em v-if="d.cleared"> · 已结清</em></span>
+          <b>-{{ d.amount }} 金</b>
+        </div>
+        <div class="settle-row net">
+          <span>实际所得</span>
+          <b>{{ rewardState.offer.breakdown.netGold }} 金</b>
+        </div>
+        <div v-if="rewardState.offer.breakdown.unpaidDebt > 0" class="unpaid">
+          ⚠ 金币不足，仍有
+          {{ rewardState.offer.breakdown.unpaidDebt }}
+          金未偿债务，将延续到后续胜利并保留到期惩罚。
+        </div>
+        <div v-if="rewardState.offer.heal" class="settle-row heal">
+          <span>林地疗愈</span><b>+{{ rewardState.offer.heal }} 生命</b>
+        </div>
+      </div>
+      <div v-else class="notice">
         ✦ {{ rewardState.offer.gold }} 金币 · 回复
         {{ rewardState.offer.heal }} 生命
       </div>
@@ -50,3 +77,4 @@ defineEmits<{ claim: [skip: boolean] }>();
     </div>
   </section>
 </template>
+

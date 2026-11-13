@@ -1,6 +1,7 @@
 import { reactive, readonly } from "vue";
 import { starter, createCard, canRemove } from "../lib/collection";
 import { upgradeCost, removalCost, campHealing } from "../lib/costs";
+import { SCAR_HP } from "@/shared/economy";
 import type { CardInstance, ExpeditionSummary } from "@/shared/domain";
 const state = reactive({
   cards: starter(),
@@ -53,6 +54,25 @@ export function removeCard(id: string) {
   state.removals++;
   state.selected = "";
   return true;
+}
+// 遭遇事件交付精确卡牌：按 key 移除一张实例（不收取移除费用）
+export function removeCardByKey(key: string): CardInstance | null {
+  const idx = state.cards.findIndex((c) => c.key === key);
+  if (idx < 0) return null;
+  const [removed] = state.cards.splice(idx, 1);
+  if (state.selected === removed!.id) state.selected = "";
+  return removed!;
+}
+export function hasCardKey(key: string): boolean {
+  return state.cards.some((c) => c.key === key);
+}
+// 伤疤：降低最大生命并同步当前生命
+export function addScar(count = 1) {
+  for (let i = 0; i < count; i++) {
+    state.hero.scars += 1;
+    state.hero.maxHp = Math.max(1, state.hero.maxHp - SCAR_HP);
+    state.hero.hp = Math.min(state.hero.hp, state.hero.maxHp);
+  }
 }
 export function openCamp() {
   state.campUsed = false;

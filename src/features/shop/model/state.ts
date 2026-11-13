@@ -2,7 +2,7 @@ import { reactive, readonly } from "vue";
 import type { JourneyContext, Purchase } from "@/shared/domain";
 import { makeStock, type StockItem } from "../lib/stock";
 import { priceFor } from "../lib/pricing";
-const state = reactive({
+import { applyDebtSurcharge } from "@/features/event";const state = reactive({
   context: null as JourneyContext | null,
   stock: [] as StockItem[],
   purchases: [] as Purchase[],
@@ -16,16 +16,23 @@ export function openShop(c: JourneyContext) {
   }
   state.open = true;
 }
-export function itemPrice(id: string) {
+// 基础定价（好感/稀缺），不含债务附加费
+export function baseItemPrice(id: string) {
   const item = state.stock.find((s) => s.id === id);
   return item && state.context
     ? priceFor(item.basePrice, state.context.influence)
     : Infinity;
 }
-export function preparePurchase(id: string): Purchase | null {
+// 实际售价：欠债期间在折扣定价之上再叠加固定附加费
+export function itemPrice(id: string, inDebt = false) {
+  const base = baseItemPrice(id);
+  if (base === Infinity) return Infinity;
+  return applyDebtSurcharge(base, inDebt);
+}
+export function preparePurchase(id: string, inDebt = false): Purchase | null {
   const item = state.stock.find((s) => s.id === id);
   if (!state.open || !item || item.sold) return null;
-  return { id: item.id, card: item.card, price: itemPrice(id) };
+  return { id: item.id, card: item.card, price: itemPrice(id, inDebt) };
 }
 export function completePurchase(p: Purchase) {
   const item = state.stock.find((s) => s.id === p.id);

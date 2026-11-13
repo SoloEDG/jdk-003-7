@@ -5,6 +5,12 @@ import { BattlePanel, battleState } from "@/features/battle";
 import { RewardPanel } from "@/features/reward";
 import { ShopPanel } from "@/features/shop";
 import { DeckPanel, deckState } from "@/features/deck";
+import {
+  EventPanel,
+  activeDebtList,
+  remainingDebt,
+  debtSummaryLine,
+} from "@/features/event";
 import { regionNames } from "@/shared/domain";
 import { session, switchTab } from "./session";
 import { load } from "./persistence";
@@ -16,8 +22,10 @@ const tabs = [
   ["reward", "奖励", "03"],
   ["shop", "商店", "04"],
   ["deck", "牌组", "05"],
+  ["event", "遭遇", "06"],
 ];
 const progress = computed(() => (routeState.visited.length / 9) * 100);
+const debts = computed(() => activeDebtList());
 </script>
 <template>
   <div class="workspace">
@@ -102,6 +110,10 @@ const progress = computed(() => (routeState.visited.length / 9) * 100);
             :gold="deckState.hero.gold"
             @buy="commands.buy"
             @leave="commands.leaveShop"
+          /><EventPanel
+            v-else-if="session.tab === 'event'"
+            @confirm="commands.confirmEvent"
+            @leave="commands.leaveEvent"
           /><DeckPanel
             v-else
             :camp="session.context?.kind === 'camp' && !routeState.resolved"
@@ -122,6 +134,18 @@ const progress = computed(() => (routeState.visited.length / 9) * 100);
               <path d="M60 160 45 120 70 70 M180 160 195 120 170 70" /></svg
             ><b>火种，不会自行熄灭。</b><small>THE EMBER REMEMBERS</small>
           </div>
+          <div v-if="debts.length" class="rail-card debt-rail">
+            <span class="eyebrow">ACTIVE DEBTS / 未偿债务</span>
+            <div v-for="d in debts" :key="d.id" class="debt-item">
+              <b>{{ remainingDebt(d) }}</b>
+              <span
+                >{{ debtSummaryLine(d)
+                }}<small>顺序 #{{ d.order + 1 }} · 已还 {{ d.paymentsTaken }}/{{
+                  d.installments
+                }} 期</small></span
+              >
+            </div>
+          </div>
           <div class="rail-card">
             <span class="eyebrow">PATH INFLUENCE</span>
             <div>
@@ -141,7 +165,7 @@ const progress = computed(() => (routeState.visited.length / 9) * 100);
         </aside>
       </div>
       <footer>
-        EMBER PATH <span>策略牌组 · 分支旅途 · 状态连锁</span> BUILD 1.0
+        EMBER PATH <span>策略牌组 · 分支旅途 · 状态连锁</span> BUILD 1.1
       </footer>
     </main>
   </div>

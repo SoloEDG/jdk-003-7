@@ -640,6 +640,172 @@ details {
 .stock button {
   font-size: 11px;
 }
+/* ===== 遭遇事件 ===== */
+.event-options {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.event-option {
+  text-align: left;
+  padding: 18px;
+  background: #20271e;
+  border-color: #3d4733;
+}
+.event-option b {
+  color: #d6dea5;
+  font-size: 14px;
+}
+.event-option small {
+  display: block;
+  color: #93a183;
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 10px 0;
+}
+.event-option em {
+  font-style: normal;
+  font-size: 11px;
+  color: #c9b98a;
+}
+.event-option em .unavailable {
+  color: #c98a7a;
+}
+.event-preview {
+  border: 1px solid #6a7748;
+  background: #262f1f;
+  border-radius: 6px;
+  padding: 20px;
+}
+.event-preview.blocked {
+  border-color: #8a5a4a;
+  background: #2f231f;
+}
+.event-preview h3 {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0 0 14px;
+  color: #d8dfa7;
+}
+.preview-warn {
+  color: #e0a48f;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.preview-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.preview-cols p {
+  font-size: 11px;
+  line-height: 1.9;
+  margin: 8px 0;
+}
+.preview-cols .gain {
+  color: #b9cc88;
+}
+.preview-cols .due {
+  color: #d6c08a;
+}
+/* ===== 路线债务到期标记 ===== */
+.depth {
+  position: relative;
+}
+.due-dot {
+  position: absolute;
+  top: -8px;
+  right: -4px;
+  font-size: 10px;
+  font-style: normal;
+  color: #e0a48f;
+}
+.route-node.debt-due {
+  border-color: #b08a5a;
+}
+.debt-line {
+  color: #d6b48a !important;
+}
+.debt-notice {
+  border-color: #8a6a4a;
+  background: #2e281f;
+  color: #e0c9a0;
+}
+.advance-notice {
+  border-color: #6a6a4a;
+  background: #2c2c1f;
+  color: #d8d6a0;
+}
+/* ===== 债务侧栏 ===== */
+.debt-rail .debt-item {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  align-items: flex-start;
+}
+.debt-rail .debt-item b {
+  color: #d6b48a;
+  font-size: 18px;
+  width: auto;
+}
+.debt-rail .debt-item span {
+  font-size: 10px;
+  line-height: 1.6;
+}
+/* ===== 奖励结算账目 ===== */
+.settlement {
+  padding: 18px;
+}
+.settle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 6px 0;
+}
+.settle-row b {
+  font-weight: 500;
+}
+.settle-row.gross {
+  color: #b9c69a;
+}
+.settle-row.deduct {
+  color: #d8a98f;
+  border-top: 1px dashed #4a5238;
+}
+.settle-row.deduct em {
+  font-style: normal;
+  font-size: 10px;
+  color: #8fa07c;
+}
+.settle-row.net {
+  border-top: 1px solid #6a7748;
+  margin-top: 4px;
+  padding-top: 10px;
+  color: #e4eab8;
+  font-size: 13px;
+}
+.settle-row.heal {
+  color: #a9c98f;
+}
+.unpaid {
+  margin-top: 10px;
+  padding: 10px;
+  background: #3a2a22;
+  border: 1px solid #8a5a4a;
+  border-radius: 4px;
+  color: #e6b3a0;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.debt-shop-notice {
+  border-color: #8a6a4a;
+  background: #2e281f;
+  color: #e0c9a0;
+}
+.surcharge-line {
+  color: #d6b48a !important;
+}
 footer {
   display: flex;
   justify-content: space-between;

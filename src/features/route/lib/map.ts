@@ -12,9 +12,14 @@ export function makeMap(): RouteNode[] {
             ? lane === 0
               ? "shop"
               : "camp"
-            : lane === 0
-              ? "battle"
-              : "elite";
+            : // 每个区域的战斗层中，固定一条支路提供可选择代价的遭遇事件
+              depth === 2 || depth === 5
+              ? lane === 0
+                ? "event"
+                : "elite"
+              : lane === 0
+                ? "battle"
+                : "elite";
       result.push({
         id: `n${depth}-${lane}`,
         region,
@@ -30,7 +35,9 @@ export function makeMap(): RouteNode[] {
                 ? "游商营地"
                 : kind === "camp"
                   ? "熄风篝火"
-                  : "失落哨站",
+                  : kind === "event"
+                    ? "歧路契约"
+                    : "失落哨站",
         influence:
           lane === 0
             ? { heat: 0, favor: 1, scarcity: 0 }

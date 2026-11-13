@@ -3,6 +3,7 @@ import { exportBattle, restoreBattle } from "@/features/battle";
 import { exportDeck, restoreDeck } from "@/features/deck";
 import { exportReward, restoreReward } from "@/features/reward";
 import { exportShop, restoreShop } from "@/features/shop";
+import { exportEvent, restoreEvent } from "@/features/event";
 import { exportSession, restoreSession } from "./session";
 const KEY = "ember-path-v1";
 function snapshot() {
@@ -13,6 +14,7 @@ function snapshot() {
     deck: exportDeck(),
     reward: exportReward(),
     shop: exportShop(),
+    event: exportEvent(),
     session: exportSession(),
   };
 }
@@ -46,6 +48,18 @@ export function load() {
       restoreDeck(d.deck);
       restoreReward(d.reward);
       restoreShop(d.shop);
+      // 旧存档可能没有事件分片，回退为空状态而非报错
+      restoreEvent(
+        d.event ?? {
+          active: null,
+          debts: [],
+          pendingAdvance: 0,
+          advanceOrigin: null,
+          nextOrder: 0,
+          settledBattles: [],
+          lastSettlement: null,
+        },
+      );
       restoreSession(d.session);
     } catch {
       restoreRoute(old.route);
@@ -53,6 +67,7 @@ export function load() {
       restoreDeck(old.deck);
       restoreReward(old.reward);
       restoreShop(old.shop);
+      restoreEvent(old.event);
       restoreSession(old.session);
       return false;
     }
